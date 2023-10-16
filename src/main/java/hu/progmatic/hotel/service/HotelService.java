@@ -21,6 +21,7 @@ public class HotelService {
         this.reservationRepo = reservationRepo;
         this.roomRepo = roomRepo;
     }
+
     public List<Integer> getAvailableRooms(){
         List<Reservation> reservations = reservationRepo.findAll();
         List<Integer> reservationsId = new ArrayList<>();

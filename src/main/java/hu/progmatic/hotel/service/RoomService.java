@@ -13,6 +13,7 @@ public class RoomService {
     public RoomService(RoomRepo roomRepo) {
         this.roomRepo = roomRepo;
     }
+
     public List<Room> getAllRoom(){
         return roomRepo.findAll();
     }

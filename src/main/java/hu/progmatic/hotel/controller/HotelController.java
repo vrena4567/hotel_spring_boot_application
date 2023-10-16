@@ -2,15 +2,14 @@ package hu.progmatic.hotel.controller;
 
 import hu.progmatic.hotel.model.Guest;
 import hu.progmatic.hotel.model.Reservation;
-import hu.progmatic.hotel.service.GuestService;
-import hu.progmatic.hotel.service.HotelService;
-import hu.progmatic.hotel.service.ReservationService;
-import hu.progmatic.hotel.service.RoomService;
+import hu.progmatic.hotel.model.Room;
+import hu.progmatic.hotel.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 public class HotelController {
@@ -27,7 +26,7 @@ public class HotelController {
     }
 
     @GetMapping("/home")
-    public String getHomePager(){
+    public String getHomePager() {
         return "home";
     }
 
@@ -37,13 +36,26 @@ public class HotelController {
         return "reservations";
     }
 
+    @GetMapping("/rooms")
+    public String showRoomList(Model model) {
+        model.addAttribute("listRooms", roomService.getAllRoom());
+        return "rooms";
+    }
+
+    @GetMapping("/guests")
+    public String showGuestList(Model model) {
+        model.addAttribute("listGuests", guestService.getAllGuest());
+        return "guests";
+    }
+
     @GetMapping("reservations/new/guest")
-    public String showNewFormForGuest(Model model){
+    public String showNewFormForGuest(Model model) {
         model.addAttribute("guest", new Guest());
         return "guest_form";
     }
+
     @PostMapping("reservations/guest/save")
-    public String saveGuest(Guest guest){
+    public String saveGuest(Guest guest) {
         guestService.saveNewGuest(guest);
         return "redirect:/reservations/new";
     }
@@ -51,6 +63,7 @@ public class HotelController {
     @GetMapping("/reservations/new")
     public String showNewForm(Model model) {
         Reservation reservation = new Reservation();
+        model.addAttribute("pageTitle", "Add New Reservation");
         model.addAttribute("reservation", reservation);
         model.addAttribute("latestGuest", guestService.getLatestGuest());
         model.addAttribute("availableRooms", hotelService.getAvailableRooms());
@@ -58,20 +71,36 @@ public class HotelController {
     }
 
     @PostMapping("reservations/save")
-    public String saveReservation(Reservation reservation, @ModelAttribute ("roomId") Integer roomId){
+    public String saveReservation(Reservation reservation, @ModelAttribute("roomId") Integer roomId, RedirectAttributes ra){
         reservation.setGuest(guestService.getLatestGuest());
         reservation.setRoom(roomService.getRoomById(roomId));
-        System.out.println(roomId);
         reservationService.saveNewReservation(reservation);
+        ra.addFlashAttribute("message", "The reservation has been saved successfully.");
         return "redirect:/reservations";
     }
 
+    @GetMapping("/reservations/edit/{id}")
+    public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws ReservationNotFoundException {
+        Reservation reservation = reservationService.getReservationById(id);
+        model.addAttribute("pageTitle", "Edit Reservation (ID: " + id + ")");
+        model.addAttribute("reservation", reservation);
+        Guest actualGuest = reservation.getGuest();
+        model.addAttribute("latestGuest", actualGuest);
+        List<Integer> allRooms = hotelService.getAvailableRooms();
+        allRooms.add(reservation.getRoom().getId());
+        model.addAttribute("availableRooms", allRooms);
+        return "reservation_edit_form";
+    }
 
-
-
-
-
-
-
+    @PostMapping("reservations/edit/save")
+    public String saveEditedReservation(Reservation reservation, @ModelAttribute("roomId") Integer roomId, RedirectAttributes ra,
+                                        @ModelAttribute("id") Integer id) throws ReservationNotFoundException {
+        Guest guest = reservationService.getReservationById(id).getGuest();
+        reservation.setGuest(guest);
+        reservation.setRoom(roomService.getRoomById(roomId));
+        reservationService.saveNewReservation(reservation);
+        ra.addFlashAttribute("message", "The reservation has been updated successfully.");
+        return "redirect:/reservations";
+    }
 
 }

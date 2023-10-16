@@ -9,10 +9,7 @@
 </head>
 <body>
 <div class="container-fluid text-center">
-    <div><h2>Manage Reservations</h2></div>
-    <div class="m-4"> <!--margin használat-->
-        <a class="h3" th:href="@{/reservations/new/guest}">Add New Reservation</a>
-    </div>
+    <div class="m-4"><h2>Manage Rooms</h2></div>
     <div th:if="${message}" class="alert alert-success text-center" role="alert">
         <!-- ez a rész felel a megjelenő successfully saved zöld sávért-->
         [[${message}]]
@@ -22,26 +19,23 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Guest</th>
-                <th>Room</th>
-                <th>Arrival</th>
-                <th>Leaving</th>
-                <th>Guests</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Jakuzzi</th>
+                <th>Sauna</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
-            <th:block th:each="currentReservation : ${listReservations}">
+            <th:block th:each="currentRoom : ${listRooms}">
                 <tr>
-                    <td>[[${currentReservation.id}]]</td>
-                    <!-- itt a guest-en belül lekérem a neveket -->
-                    <td>[[${currentReservation.guest.firstName} + ' ' + ${currentReservation.guest.lastName}]]</td>
-                    <td>[[${currentReservation.room.id}]]</td>
-                    <td>[[${#dates.format(currentReservation.arrival, 'yyyy-MM-dd')}]]</td>
-                    <td>[[${#dates.format(currentReservation.leaving, 'yyyy-MM-dd')}]]</td>
-                    <td>[[${currentReservation.guestsNumber}]]</td>
+                    <td>[[${currentRoom.id}]]</td>
+                    <td>[[${currentRoom.capacity}]]</td>
+                    <td>[[${currentRoom.price}]]</td>
+                    <td>[[${currentRoom.jakuzzi}]]</td>
+                    <td>[[${currentRoom.sauna}]]</td>
                     <td> <!-- ezek a action hyperlink-ek -->
-                        <a class="h5 me-3" th:href="@{'/reservations/edit/' + ${currentReservation.id}}">Edit</a> <!--me-3 = margin-right 3-mal, hogy legyen köztük hely-->
-                        <a class="h5" th:href="@{'/reservations/delete/' + ${currentReservation.id}}">Delete</a>
+                        <a class="h5" th:href="@{'/room/edit/' + ${currentRoom.id}}">Edit</a>
                     </td>
                 </tr>
             </th:block>

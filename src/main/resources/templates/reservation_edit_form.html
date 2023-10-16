@@ -10,7 +10,7 @@
 <body>
 <div class="container-fluid">
     <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
-    <form th:action="@{/reservations/save}" method="post" th:object="${reservation}"
+    <form th:action="@{/reservations/edit/save}" method="post" th:object="${reservation}"
           style="max-width: 500px; margin: 30px auto;">
         <!-- itt a 'reservation' ugyanaz, amit a modelbe megadtunk név-->
         <input type="hidden" th:field="*{id}">

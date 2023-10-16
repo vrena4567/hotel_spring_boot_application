@@ -12,7 +12,7 @@ import java.util.Locale;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @ManyToOne
     @JoinColumn(name = "guest_id")
     private Guest guest;
@@ -25,7 +25,7 @@ public class Reservation {
     private Date leaving;
     @Column(name = "guests_number")
     private Integer guestsNumber;
-    public Reservation(Long id, Guest guest, Room room, Date arrival, Date leaving, Integer guestsNumber) {
+    public Reservation(Integer id, Guest guest, Room room, Date arrival, Date leaving, Integer guestsNumber) {
         this.id = id;
         this.guest = guest;
         this.room = room;
@@ -68,11 +68,11 @@ public class Reservation {
         this.leaving = leaving;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public Integer getGuestsNumber() {
