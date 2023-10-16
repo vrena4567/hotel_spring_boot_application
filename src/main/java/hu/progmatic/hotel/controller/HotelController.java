@@ -71,7 +71,7 @@ public class HotelController {
     }
 
     @PostMapping("reservations/save")
-    public String saveReservation(Reservation reservation, @ModelAttribute("roomId") Integer roomId, RedirectAttributes ra){
+    public String saveReservation(Reservation reservation, @ModelAttribute("roomId") Integer roomId, RedirectAttributes ra) {
         reservation.setGuest(guestService.getLatestGuest());
         reservation.setRoom(roomService.getRoomById(roomId));
         reservationService.saveNewReservation(reservation);
@@ -95,12 +95,26 @@ public class HotelController {
     @PostMapping("reservations/edit/save")
     public String saveEditedReservation(Reservation reservation, @ModelAttribute("roomId") Integer roomId, RedirectAttributes ra,
                                         @ModelAttribute("id") Integer id) throws ReservationNotFoundException {
-        Guest guest = reservationService.getReservationById(id).getGuest();
-        reservation.setGuest(guest);
-        reservation.setRoom(roomService.getRoomById(roomId));
-        reservationService.saveNewReservation(reservation);
-        ra.addFlashAttribute("message", "The reservation has been updated successfully.");
+        try{
+            Guest guest = reservationService.getReservationById(id).getGuest();
+            reservation.setGuest(guest);
+            reservation.setRoom(roomService.getRoomById(roomId));
+            reservationService.saveNewReservation(reservation);
+            ra.addFlashAttribute("message", "The reservation has been updated successfully.");
+        } catch (ReservationNotFoundException e){
+            ra.addFlashAttribute("message", e.getMessage());
+        }
         return "redirect:/reservations";
     }
 
+    @GetMapping("/reservations/delete/{id}")
+    public String deleteReservation(@PathVariable("id") Integer id, RedirectAttributes ra) throws ReservationNotFoundException {
+        try {
+            reservationService.deleteById(id);
+            ra.addFlashAttribute("message", "The reservation (ID: " + id + ") was deleted.");
+        } catch (ReservationNotFoundException e) {
+            ra.addFlashAttribute("message", e.getMessage());
+        }
+        return "redirect:/reservations";
+    }
 }

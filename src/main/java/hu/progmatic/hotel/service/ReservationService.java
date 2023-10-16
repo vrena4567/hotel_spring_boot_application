@@ -32,4 +32,11 @@ public class ReservationService {
         }
         throw new ReservationNotFoundException("Could not find any reservations with ID " + id);
     }
+    public void deleteById(Integer id) throws ReservationNotFoundException {
+        Integer count = reservationRepo.countById(id);
+        if(count == null || count == 0){
+            throw new ReservationNotFoundException("Could not find any reservations with ID " + id);
+        }
+        reservationRepo.deleteById(id);
+    }
 }
