@@ -3,6 +3,7 @@ package hu.progmatic.hotel.service;
 import hu.progmatic.hotel.model.Reservation;
 import hu.progmatic.hotel.model.Room;
 import hu.progmatic.hotel.repository.ReservationRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ReservationService {
         }
         throw new ReservationNotFoundException("Could not find any reservations with ID " + id);
     }
+    @Transactional
     public void deleteById(Integer id) throws ReservationNotFoundException {
         Integer count = reservationRepo.countById(id);
         if(count == null || count == 0){

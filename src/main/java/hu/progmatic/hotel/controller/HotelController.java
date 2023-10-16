@@ -36,18 +36,6 @@ public class HotelController {
         return "reservations";
     }
 
-    @GetMapping("/rooms")
-    public String showRoomList(Model model) {
-        model.addAttribute("listRooms", roomService.getAllRoom());
-        return "rooms";
-    }
-
-    @GetMapping("/guests")
-    public String showGuestList(Model model) {
-        model.addAttribute("listGuests", guestService.getAllGuest());
-        return "guests";
-    }
-
     @GetMapping("reservations/new/guest")
     public String showNewFormForGuest(Model model) {
         model.addAttribute("guest", new Guest());

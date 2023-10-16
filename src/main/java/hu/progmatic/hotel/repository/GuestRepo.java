@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GuestRepo extends JpaRepository<Guest, Integer> {
+    Integer countById(Integer id);
 }

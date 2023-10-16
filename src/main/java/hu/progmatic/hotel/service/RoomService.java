@@ -5,6 +5,7 @@ import hu.progmatic.hotel.repository.RoomRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService {
@@ -17,6 +18,10 @@ public class RoomService {
     public List<Room> getAllRoom(){
         return roomRepo.findAll();
     }
+
+    public Room updateRoom(Room room){
+        return roomRepo.save(room);
+    }
     public int getAllRoomCapacity(){
         int allRoomCapacity = 0;
         for (int i = 0; i < getAllRoom().size(); i++) {
@@ -28,4 +33,12 @@ public class RoomService {
         return roomRepo.findById(id).orElse(null);
     }
 
+
+    public Room getRoomByID(Integer id) throws RoomNotFoundException {
+        Optional<Room> result = roomRepo.findById(id);
+        if(result.isPresent()){
+            return result.get();
+        }
+        throw new RoomNotFoundException("Could not find any rooms with ID " + id);
+    }
 }
