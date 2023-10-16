@@ -1,6 +1,7 @@
 package hu.progmatic.hotel.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -17,14 +18,13 @@ public class Guest {
     @Column(name = "place_of_birth")
     private String placeOfBirth;
     @Column(name = "birth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
     @Column(name = "id_number")
     private String idNumber;
     private String email;
-    @Column(name = "guests_number")
-    private Integer guestsNumber;
 
-    public Guest(Integer id, Title title, String firstName, String lastName, String placeOfBirth, Date birth, String idNumber, String email, Integer guestsNumber) {
+    public Guest(Integer id, Title title, String firstName, String lastName, String placeOfBirth, Date birth, String idNumber, String email) {
         this.id = id;
         this.title = title;
         this.firstName = firstName;
@@ -33,7 +33,7 @@ public class Guest {
         this.birth = birth;
         this.idNumber = idNumber;
         this.email = email;
-        this.guestsNumber = guestsNumber;
+
     }
     public Guest(){}
 
@@ -99,14 +99,6 @@ public class Guest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Integer getGuestsNumber() {
-        return guestsNumber;
-    }
-
-    public void setGuestsNumber(Integer guestsNumber) {
-        this.guestsNumber = guestsNumber;
     }
 
 

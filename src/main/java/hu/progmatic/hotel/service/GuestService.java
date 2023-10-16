@@ -20,4 +20,7 @@ public class GuestService {
     public Guest saveNewGuest(Guest guest){
         return guestRepo.save(guest);
     }
+    public Guest getLatestGuest(){
+        return getAllGuest().get(getAllGuest().size()-1);
+    }
 }

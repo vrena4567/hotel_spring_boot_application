@@ -1,6 +1,7 @@
 package hu.progmatic.hotel.service;
 
 import hu.progmatic.hotel.model.Reservation;
+import hu.progmatic.hotel.model.Room;
 import hu.progmatic.hotel.repository.ReservationRepo;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +17,9 @@ public class ReservationService {
     public List<Reservation> getAllReservation(){
         return reservationRepo.findAll();
     }
+
+    public void saveNewReservation(Reservation reservation){
+        reservationRepo.save(reservation);
+    }
+
 }
