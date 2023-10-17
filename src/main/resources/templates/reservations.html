@@ -27,6 +27,7 @@
                 <th>Arrival</th>
                 <th>Leaving</th>
                 <th>Guests</th>
+                <th>Price of Reservation</th>
             </tr>
             </thead>
             <tbody>
@@ -36,11 +37,18 @@
                     <!-- itt a guest-en belül lekérem a neveket -->
                     <td>[[${currentReservation.guest.firstName} + ' ' + ${currentReservation.guest.lastName}]]</td>
                     <td>[[${currentReservation.room.id}]]</td>
-                    <td>[[${#dates.format(currentReservation.arrival, 'yyyy-MM-dd')}]]</td>
-                    <td>[[${#dates.format(currentReservation.leaving, 'yyyy-MM-dd')}]]</td>
+                    <td>[[${currentReservation.arrival}]]</td>
+                    <td>[[${currentReservation.leaving}]]</td>
                     <td>[[${currentReservation.guestsNumber}]]</td>
+                    <td> <!-- szorzás két változóval, majd kiíratás -->
+                        <th:block
+                                th:with="variable = ${currentReservation.getDuration()}, controllerVar = ${currentReservation.room.price}, var = ${variable * controllerVar}">
+                            <p th:text="${#numbers.formatCurrency(var)}"></p>
+                        </th:block>
+                    </td>
                     <td> <!-- ezek a action hyperlink-ek -->
-                        <a class="h5 me-3" th:href="@{'/reservations/edit/' + ${currentReservation.id}}">Edit</a> <!--me-3 = margin-right 3-mal, hogy legyen köztük hely-->
+                        <a class="h5 me-3" th:href="@{'/reservations/edit/' + ${currentReservation.id}}">Edit</a>
+                        <!--me-3 = margin-right 3-mal, hogy legyen köztük hely-->
                         <a class="h5" th:href="@{'/reservations/delete/' + ${currentReservation.id}}">Delete</a>
                     </td>
                 </tr>
@@ -50,9 +58,22 @@
 
         </table>
     </div>
-    <div><a class="h4 m-4" th:href="@{/home}">Back Home</a></div>
+    <div><a class="h4 m-4 mb-5" th:href="@{/home}">Back Home</a></div>
 </div>
-
+<div class="container text-center">
+    <h2 class="h2 m-3">How full the Hotel is at the moment?</h2>
+    <div class="progress"> <!-- progress bar beállításokkal -->
+        <div class="progress-bar"
+             role="progressbar"
+             th:style="'width :' + ((${bookedPlacesNumber}/${allRoomCapacity})*100) + '%'"
+             th:aria-valuenow="${bookedPlacesNumber}"
+             th:aria-valuemin="0"
+             aria-valuemax="100">
+        </div>
+    </div>
+    <h4 class="h4 m-3">Available places left:</h4>
+    <div class= "h5" th:text="*{availableRoomCapacity}"></div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

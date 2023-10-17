@@ -1,12 +1,11 @@
 package hu.progmatic.hotel.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Locale;
 
 @Entity
 public class Reservation {
@@ -20,12 +19,13 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date arrival;
+    private LocalDate arrival;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date leaving;
+    private LocalDate leaving;
     @Column(name = "guests_number")
     private Integer guestsNumber;
-    public Reservation(Integer id, Guest guest, Room room, Date arrival, Date leaving, Integer guestsNumber) {
+
+    public Reservation(Integer id, Guest guest, Room room, LocalDate arrival, LocalDate leaving, Integer guestsNumber) {
         this.id = id;
         this.guest = guest;
         this.room = room;
@@ -52,19 +52,19 @@ public class Reservation {
         this.room = room;
     }
 
-    public Date getArrival() {
+    public LocalDate getArrival() {
         return arrival;
     }
 
-    public void setArrival(Date arrival) {
+    public void setArrival(LocalDate arrival) {
         this.arrival = arrival;
     }
 
-    public Date getLeaving() {
+    public LocalDate getLeaving() {
         return leaving;
     }
 
-    public void setLeaving(Date leaving) {
+    public void setLeaving(LocalDate leaving) {
         this.leaving = leaving;
     }
 
@@ -81,5 +81,10 @@ public class Reservation {
 
     public void setGuestsNumber(Integer guestsNumber) {
         this.guestsNumber = guestsNumber;
+    }
+
+    public Integer getDuration(){
+        Integer days = Math.toIntExact(ChronoUnit.DAYS.between(this.arrival, this.leaving));
+        return days;
     }
 }

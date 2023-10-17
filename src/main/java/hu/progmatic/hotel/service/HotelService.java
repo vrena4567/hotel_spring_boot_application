@@ -7,6 +7,8 @@ import hu.progmatic.hotel.repository.ReservationRepo;
 import hu.progmatic.hotel.repository.RoomRepo;
 import org.springframework.stereotype.Service;
 
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,5 +37,26 @@ public class HotelService {
         }
         roomId.removeAll(reservationsId);
         return roomId;
+    }
+
+    public Integer getAvailableRoomCapacity(){
+        List<Integer> availableRooms = getAvailableRooms();
+        Integer capacity = 0;
+        for (Integer id: availableRooms) {
+            for (Room room: roomRepo.findAll()) {
+                if(room.getId() == id){
+                    capacity += room.getCapacity();
+                }
+            }
+        }
+        return capacity;
+    }
+    public Integer getBookedPlacesNumer(){
+        List<Reservation> reservations = reservationRepo.findAll();
+        Integer bookedPlaces = 0;
+        for (Reservation currentReservation : reservations) {
+            bookedPlaces += currentReservation.getRoom().getCapacity();
+        }
+        return bookedPlaces;
     }
 }

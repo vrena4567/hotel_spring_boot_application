@@ -33,6 +33,9 @@ public class HotelController {
     @GetMapping("/reservations")
     public String showReservationList(Model model) {
         model.addAttribute("listReservations", reservationService.getAllReservation());
+        model.addAttribute("allRoomCapacity", roomService.getAllRoomCapacity());
+        model.addAttribute("bookedPlacesNumber", hotelService.getBookedPlacesNumer());
+        model.addAttribute("availableRoomCapacity", hotelService.getAvailableRoomCapacity());
         return "reservations";
     }
 
